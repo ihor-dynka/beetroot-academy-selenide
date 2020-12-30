@@ -1,15 +1,13 @@
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class BeetrootAcademyTest {
+
+    private SelenideElement element;
 
     @BeforeAll
     static void beforeAll() {
@@ -30,5 +28,8 @@ public class BeetrootAcademyTest {
         $(By.xpath("//*[@class='selectedCity_info']//h2"))
                 .shouldBe(Condition.visible, Condition.text("Івано-Франківськ"));
         Selenide.screenshot("city");
+
+        $(By.linkText("Міста")).hover();
+        $(By.linkText("Київ")).click();
     }
 }
