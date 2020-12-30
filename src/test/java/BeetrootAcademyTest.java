@@ -1,35 +1,28 @@
-import com.codeborne.selenide.*;
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-
-import static com.codeborne.selenide.Selenide.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class BeetrootAcademyTest {
-
-    private SelenideElement element;
 
     @BeforeAll
     static void beforeAll() {
         Configuration.screenshots = true;
         Configuration.browser = "chrome";
         Configuration.startMaximized = true;
+        Configuration.headless = false;
         Configuration.reportsFolder = "screenshots"; //package for screenshots
     }
 
-    @Test
-    public void testContactMe() {
-        open("https://www.google.com");
-        $(Selectors.byName("q")).setValue("beetroot academy ivano-frankivsk").pressEnter();
 
-        $(By.xpath("//a[@href='https://beetroot.academy/frankivsk/']"))
-                .click();
-
-        $(By.xpath("//*[@class='selectedCity_info']//h2"))
-                .shouldBe(Condition.visible, Condition.text("Івано-Франківськ"));
-        Selenide.screenshot("city");
-
-        $(By.linkText("Міста")).hover();
-        $(By.linkText("Київ")).click();
+    @ParameterizedTest
+    @ValueSource(strings = {"Київ", "Житомир", "Івано-Франківськ"})
+    public void testContactMe(String city) {
+        new GooglePage()
+                .open()
+                .search("beetroot academy ivano-frankivsk")
+                .select("https://beetroot.academy/frankivsk/")
+                .userShouldBeRedirectedToHomePage("Івано-Франківськ")
+                .selectCity(city);
     }
 }
